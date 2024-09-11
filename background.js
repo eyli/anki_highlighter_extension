@@ -1,4 +1,4 @@
-import { OPENAI_KEY } from './secrets';
+importScripts('secrets.js');
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
