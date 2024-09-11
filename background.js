@@ -1,7 +1,9 @@
+import { OPENAI_KEY } from './secrets';
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "saveText",
-    title: "Save Highlighted Text",
+    title: "Store Text as Anki Card",
     contexts: ["selection"],
   });
 
@@ -19,13 +21,12 @@ chrome.runtime.onInstalled.addListener(() => {
 function storeAnkiCard(text) {
   const prompt = generatePrompt(text);
   const apiUrl = "https://api.openai.com/v1/chat/completions";
-  const apiKey = "[INSERT API KEY HERE]";
 
   fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
+      "Authorization": `Bearer ${OPENAI_KEY}`,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
@@ -38,11 +39,9 @@ function storeAnkiCard(text) {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       // Take the result from data, and split it by newline into a front
       // and back variable. Then, store the Anki card with the front and back.
       const parsedData = JSON.parse(data.choices[0].message.content);
-      console.log(parsedData);
 
       fetch('http://127.0.0.1:8765', {
         method: 'POST',
@@ -93,7 +92,6 @@ function storeAnkiCard(text) {
 }
 
 function generatePrompt(text) {
-  console.log("I'm here now");
   return `
 I'm going to give you a chunk of text. I'd like to generate an Anki flashcard, where the front of the flashcard is a question that asks a general question that covers the content of the text, and the back of the flashcard contains the answer to the question, based on the text provided. 
 
@@ -108,5 +106,5 @@ Could you please respond with a JSON blob of the following format?
   "answer": "answer"
 }
 
-Thank you!`;
+Please output the blob as plain text, without any markdown to indicate formatting or anything. Thank you!`;
 }
