@@ -6,16 +6,16 @@ chrome.runtime.onInstalled.addListener(() => {
     title: "Store Text as Anki Card",
     contexts: ["selection"],
   });
+});
 
-  chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === "saveText") {
-      chrome.tabs.sendMessage(tab.id, {message: "getHighlightedText"}, (response) => {
-        if (response && response.text) {
-          storeAnkiCard(response.text);
-        }
-      });
-    }
-  });
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "saveText") {
+    chrome.tabs.sendMessage(tab.id, {message: "getHighlightedText"}, (response) => {
+      if (response && response.text) {
+        storeAnkiCard(response.text);
+      }
+    });
+  }
 });
 
 function storeAnkiCard(text) {
@@ -34,7 +34,7 @@ function storeAnkiCard(text) {
         {role: "system", content: "You are a helpful assistant."},
         {role: "user", content: prompt}
       ],
-      max_tokens: 100,
+      max_tokens: 1000,
     }),
   })
     .then(response => response.json())
