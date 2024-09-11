@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Text Highlighter",
+  "name": "Anki Highlighter",
   "version": "1.0",
-  "description": "Highlight text and send it to a remote database",
+  "description": "Highlight text and generate a review card to store to Anki",
   "permissions": [
     "activeTab",
     "storage",
